@@ -4,6 +4,13 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
 <meta name="format-detection" content="telephone=no" />
+<meta name="theme-color" content="#4f46e5" />
+<link rel="manifest" href="./manifest.json" />
+<link rel="icon" href="./icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="./icon.svg" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="直播打卡" />
 <title>直播团队打卡</title>
 <style>
 :root{
@@ -36,7 +43,7 @@ button{outline:none;border:none;background:none;cursor:pointer;color:inherit}
 .topbar{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--border);padding-top:env(safe-area-inset-top)}
 .topbar-inner{max-width:720px;margin:0 auto;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .topbar-title{font-weight:700;font-size:16px}
-.topbar-actions{display:flex;gap:8px}
+.topbar-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .field{margin-bottom:12px;min-width:0}
 .field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -92,21 +99,86 @@ tbody tr:last-child td{border-bottom:none}
 <div id="app"><div class="loading">加载中…</div></div>
 <div class="toast" id="toast"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
 /* =========================================================
- *  1. 配置区 —— 换成你自己的 Supabase 地址和 anon key
+ *  1. 配置区
  * =======================================================*/
 const SUPABASE_URL      = 'https://lzeevgnsknxhkrmvrpjq.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx6ZWV2Z25za254aGtybXZycGpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEwMTIxMTMsImV4cCI6MjEwNjU4ODExM30.1g31WPG9Y9RwtN24Sel0fSLZTiFNNZ_kl5sUN4-PVxM';
 
 const ADMIN_KEY     = '121315';
-const LAST_NAME_KEY = 'lck_last_name_v1';   // 记住上次填写的姓名
-
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const LAST_NAME_KEY = 'lck_last_name_v1';
 
 /* =========================================================
- *  2. 工具函数
+ *  2. 轻量 Supabase REST 客户端（替代 supabase-js）
+ *     —— 不再需要加载外部 CDN，首屏更快
+ * =======================================================*/
+class PostgrestQuery {
+  constructor(table){
+    this._table   = table;
+    this._method  = 'GET';
+    this._filters = [];
+    this._orders  = [];
+    this._body    = null;
+    this._select  = '*';
+  }
+  select(cols){ this._select = cols || '*'; return this; }
+  insert(data){ this._method = 'POST';  this._body = data; return this; }
+  update(data){ this._method = 'PATCH'; this._body = data; return this; }
+  delete(){     this._method = 'DELETE'; return this; }
+  eq(c, v){  this._filters.push(`${c}=eq.${encodeURIComponent(v)}`);  return this; }
+  gte(c, v){ this._filters.push(`${c}=gte.${encodeURIComponent(v)}`); return this; }
+  lt(c, v){  this._filters.push(`${c}=lt.${encodeURIComponent(v)}`);  return this; }
+  order(c, opts){
+    const dir = (opts && opts.ascending === false) ? 'desc' : 'asc';
+    this._orders.push(`${c}.${dir}`);
+    return this;
+  }
+  _buildUrl(){
+    let url = `${SUPABASE_URL}/rest/v1/${this._table}`;
+    const params = [];
+    if (this._method === 'GET') params.push(`select=${this._select}`);
+    if (this._orders.length)  params.push(`order=${this._orders.join(',')}`);
+    if (this._filters.length) params.push(...this._filters);
+    if (params.length) url += '?' + params.join('&');
+    return url;
+  }
+  async _run(){
+    const headers = {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal'
+    };
+    const opts = { method: this._method, headers };
+    if (this._body) opts.body = JSON.stringify(this._body);
+
+    try {
+      const res = await fetch(this._buildUrl(), opts);
+      if (!res.ok){
+        let msg = `HTTP ${res.status}`, code = null;
+        try {
+          const j = await res.json();
+          msg  = j.message || j.hint || msg;
+          code = j.code || null;
+        } catch(e){}
+        return { data: null, error: { message: msg, code } };
+      }
+      if (res.status === 204) return { data: null, error: null };
+      const text = await res.text();
+      if (!text) return { data: [], error: null };
+      try { return { data: JSON.parse(text), error: null }; }
+      catch(e){ return { data: [], error: null }; }
+    } catch(e){
+      return { data: null, error: { message: e.message || '网络错误' } };
+    }
+  }
+  then(f, r){ return this._run().then(f, r); }
+}
+const sb = { from: t => new PostgrestQuery(t) };
+
+/* =========================================================
+ *  3. 工具函数
  * =======================================================*/
 const app = document.getElementById('app');
 const pad = n => String(n).padStart(2, '0');
@@ -159,63 +231,108 @@ function toast(msg, type){
   el._t = setTimeout(() => el.classList.remove('show'), 2200);
 }
 
-/* ---------- 手机端 APP 下载 ---------- */
-function isWeChatBrowser(){
-  return /MicroMessenger/i.test(navigator.userAgent);
+/* =========================================================
+ *  4. PWA 环境检测与安装
+ * =======================================================*/
+let deferredPrompt = null;
+
+function isPWAStandalone(){
+  return window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true
+      || document.referrer.indexOf('android-app://') === 0;
+}
+function isIOS(){
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+function isAndroidToAppWebView(){
+  const ua = navigator.userAgent || '';
+  const android = /Android/i.test(ua);
+  const explicitToApp = /ToApp\//i.test(ua) || /ToApp/i.test(ua);
+  const androidWebView = /;\s*wv\)/i.test(ua)
+    || (android && /Version\/\d+(?:\.\d+)+/i.test(ua) && /Chrome\/\d+/i.test(ua) && !/Chrome\/\d+.*Mobile Safari\//i.test(ua));
+  return android && (explicitToApp || androidWebView);
 }
 
-function setupAppDownload(){
-  const btn = document.getElementById('btnDownloadApp');
-  if (!btn) return;
+function updateDownloadButtons(){
+  const apkBtn = document.getElementById('btnDownloadApp');
+  const pwaBtn = document.getElementById('btnPWAInstall');
+  if (!apkBtn && !pwaBtn) return;
 
-  btn.addEventListener('click', function(e){
-    if (!isWeChatBrowser()) return;
+  // 已经在 PWA 中打开 → 全部隐藏
+  if (isPWAStandalone()){
+    if (apkBtn) apkBtn.style.display = 'none';
+    if (pwaBtn) pwaBtn.style.display = 'none';
+    return;
+  }
+  // Android WebView（ToApp）中 → 隐藏 APK 按钮
+  if (isAndroidToAppWebView() && apkBtn){
+    apkBtn.style.display = 'none';
+  }
+  // PWA 按钮：只有能安装（或 iOS 手动安装）时才显示
+  if (pwaBtn){
+    if (deferredPrompt || (isIOS() && !isPWAStandalone())){
+      pwaBtn.style.display = 'inline-flex';
+    } else {
+      pwaBtn.style.display = 'none';
+    }
+  }
+}
 
-    e.preventDefault();
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  updateDownloadButtons();
+});
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+  updateDownloadButtons();
+});
 
-    const mask = document.createElement('div');
-    mask.className = 'modal-mask';
-    mask.innerHTML = `
-      <div class="modal">
-        <h3>请在浏览器中下载 APP</h3>
-        <p>微信内置浏览器通常会限制 APK 文件直接下载。请点击右上角「⋯」，选择「在浏览器中打开」，再点击“下载手机端 APP”。</p>
-        <button class="btn primary block" id="downloadTipOk">知道了</button>
-      </div>`;
-    document.body.appendChild(mask);
-    mask.querySelector('#downloadTipOk').onclick = () => mask.remove();
-  });
+async function onPWAInstallClick(){
+  if (deferredPrompt){
+    deferredPrompt.prompt();
+    try { await deferredPrompt.userChoice; } catch(e){}
+    deferredPrompt = null;
+    updateDownloadButtons();
+    return;
+  }
+  if (isIOS()){
+    alert('iOS 安装方法：\n\n1. 点击底部 Safari 的「分享」按钮\n2. 选择「添加到主屏幕」\n3. 确认添加\n\n添加后从主屏幕启动，即可像 App 一样使用。');
+    return;
+  }
+  alert('当前浏览器不支持自动安装。\n\n你可以打开浏览器菜单，选择「添加到主屏幕」或「安装应用」。');
 }
 
 /* =========================================================
- *  3. 全局状态
+ *  5. 全局状态
  * =======================================================*/
 const state = {
-  view: 'main',          // main | admin
+  view: 'main',
   isAdmin: false,
 
-  streamers: [],         // 所有直播人员
-  activeStreamers: [],   // 启用中的人员（供选择）
+  streamers: [],
+  activeStreamers: [],
 
   allLocations: [],
   locations: [],
 
   geo: null,
-  geoStatus: 'idle',     // idle | loading | ok | out | error
+  geoStatus: 'idle',
   geoMsg: '',
   matched: null,
 
-  currentStreamer: null, // 当前选中的人员 {id, name}
+  currentStreamer: null,
   myToday: [],
   myMonth: [],
 
-  adminTab: 'data',      // data | locations | people
+  adminTab: 'data',
   adminMonth: currentMonth(),
   adminData: [],
   editingLoc: null
 };
 
 /* =========================================================
- *  4. 定位
+ *  6. 定位
  * =======================================================*/
 function locateOnce(){
   return new Promise((resolve, reject) => {
@@ -263,7 +380,7 @@ async function doLocate(){
 }
 
 /* =========================================================
- *  5. 数据加载
+ *  7. 数据加载
  * =======================================================*/
 async function loadStreamers(){
   const { data, error } = await sb.from('streamers').select('*').order('name');
@@ -278,9 +395,7 @@ async function loadLocations(){
   state.locations = state.allLocations.filter(l => l.active);
 }
 async function loadStreamerData(name){
-  if (!name){
-    state.myToday = []; state.myMonth = []; return;
-  }
+  if (!name){ state.myToday = []; state.myMonth = []; return; }
   const [mStart, mEnd] = monthRange(currentMonth());
   const [a, b] = await Promise.all([
     sb.from('checkins').select('*')
@@ -306,14 +421,14 @@ async function loadAdminData(){
 }
 
 /* =========================================================
- *  6. 路由渲染
+ *  8. 路由渲染
  * =======================================================*/
 function render(){
   if (state.view === 'admin'){ renderAdmin(); return; }
   renderMain();
 }
 
-/* ---------- 6.1 主页（打卡） ---------- */
+/* ---------- 8.1 主页 ---------- */
 function renderMain(){
   const savedName = (() => {
     try { return localStorage.getItem(LAST_NAME_KEY) || ''; } catch(e){ return ''; }
@@ -330,7 +445,8 @@ function renderMain(){
       <div class="topbar-actions">
         <a class="btn tiny ghost" id="btnDownloadApp"
            href="./base.apk" download="直播团队打卡.apk"
-           style="text-decoration:none;">下载手机端 APP</a>
+           style="text-decoration:none;">Android端下载</a>
+        <button class="btn tiny ghost" id="btnPWAInstall" style="display:none;">其他方式下载</button>
         <button class="btn tiny ghost" id="btnAdmin">管理后台</button>
       </div>
     </div>
@@ -390,11 +506,12 @@ function renderMain(){
 
   document.getElementById('btnAdmin').onclick = askAdminKey;
   document.getElementById('btnCheckin').onclick = submitCheckin;
+  const pwaBtn = document.getElementById('btnPWAInstall');
+  if (pwaBtn) pwaBtn.onclick = onPWAInstallClick;
 
   const nameInput = document.getElementById('streamerName');
   nameInput.addEventListener('change', onStreamerChange);
   nameInput.addEventListener('input', () => {
-    // 输入过程中仅更新 state 中当前选中的人员（不加载数据）
     const v = nameInput.value.trim();
     const s = state.activeStreamers.find(x => x.name === v);
     if (s) state.currentStreamer = { id: s.id, name: s.name };
@@ -408,6 +525,7 @@ function renderMain(){
   renderGeoCard();
   renderTodayList();
   renderMonthSummary();
+  updateDownloadButtons();
 }
 
 async function onStreamerChange(e){
@@ -510,7 +628,7 @@ function renderMonthSummary(){
     </div>`;
 }
 
-/* ---------- 6.2 提交打卡 ---------- */
+/* ---------- 8.2 提交打卡 ---------- */
 async function submitCheckin(){
   const nameInput = document.getElementById('streamerName');
   const name = nameInput.value.trim();
@@ -572,7 +690,7 @@ async function submitCheckin(){
 }
 
 /* =========================================================
- *  7. 管理员密钥验证
+ *  9. 管理员密钥验证
  * =======================================================*/
 function askAdminKey(){
   const mask = document.createElement('div');
@@ -616,7 +734,7 @@ function askAdminKey(){
 }
 
 /* =========================================================
- *  8. 管理后台
+ * 10. 管理后台
  * =======================================================*/
 function renderAdmin(){
   app.innerHTML = `
@@ -662,7 +780,7 @@ function renderAdminMain(){
   else renderAdminPeople();
 }
 
-/* ---------- 8.1 打卡数据 ---------- */
+/* ---------- 10.1 打卡数据 ---------- */
 function renderAdminData(){
   const main = document.getElementById('adminMain');
   if (!main) return;
@@ -671,9 +789,8 @@ function renderAdminData(){
   const map = new Map();
   for (const r of rows){
     const name = r.user_name || '未知用户';
-    const key = name;
-    if (!map.has(key)) map.set(key, { name, count: 0, total: 0, days: new Set() });
-    const o = map.get(key);
+    if (!map.has(name)) map.set(name, { name, count: 0, total: 0, days: new Set() });
+    const o = map.get(name);
     o.count++;
     o.total += r.duration_minutes;
     o.days.add(r.work_date);
@@ -768,7 +885,7 @@ function exportCSV(){
   toast('已导出', 'success');
 }
 
-/* ---------- 8.2 打卡点管理 ---------- */
+/* ---------- 10.2 打卡点管理 ---------- */
 function renderAdminLocations(){
   const main = document.getElementById('adminMain');
   if (!main) return;
@@ -872,7 +989,7 @@ async function handleLocAction(act, id){
   }
 }
 
-/* ---------- 8.3 直播人员名单管理 ---------- */
+/* ---------- 10.3 直播人员名单管理 ---------- */
 function renderAdminPeople(){
   const main = document.getElementById('adminMain');
   if (!main) return;
@@ -979,7 +1096,7 @@ async function handlePersonAction(act, id){
 }
 
 /* =========================================================
- *  9. 启动
+ * 11. 启动
  * =======================================================*/
 async function boot(){
   try {
@@ -988,7 +1105,6 @@ async function boot(){
     console.error(e);
   }
   render();
-  setupAppDownload();
 }
 boot();
 </script>
