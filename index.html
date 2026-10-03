@@ -6,8 +6,8 @@
 <meta name="format-detection" content="telephone=no" />
 <meta name="theme-color" content="#4f46e5" />
 <link rel="manifest" href="./manifest.json" />
-<link rel="icon" href="./icon.svg" type="image/svg+xml" />
-<link rel="apple-touch-icon" href="./icon.svg" />
+<link rel="icon" href="./icon.png" type="image/png" />
+<link rel="apple-touch-icon" href="./icon.png" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 <meta name="apple-mobile-web-app-title" content="直播打卡" />
@@ -258,17 +258,14 @@ function updateDownloadButtons(){
   const pwaBtn = document.getElementById('btnPWAInstall');
   if (!apkBtn && !pwaBtn) return;
 
-  // 已经在 PWA 中打开 → 全部隐藏
   if (isPWAStandalone()){
     if (apkBtn) apkBtn.style.display = 'none';
     if (pwaBtn) pwaBtn.style.display = 'none';
     return;
   }
-  // Android WebView（ToApp）中 → 隐藏 APK 按钮
   if (isAndroidToAppWebView() && apkBtn){
     apkBtn.style.display = 'none';
   }
-  // PWA 按钮：只有能安装（或 iOS 手动安装）时才显示
   if (pwaBtn){
     if (deferredPrompt || (isIOS() && !isPWAStandalone())){
       pwaBtn.style.display = 'inline-flex';
