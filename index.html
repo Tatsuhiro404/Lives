@@ -3,42 +3,21 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
-<meta name="format-detection" content="telephone=no" />
 <title>直播团队打卡</title>
 <style>
 :root{
-  --primary:#4f46e5;
-  --primary-dark:#4338ca;
-  --bg:#f4f5f7;
-  --card:#ffffff;
-  --text:#1f2329;
-  --muted:#8a9099;
-  --border:#e9ebef;
-  --green:#10b981;
-  --red:#ef4444;
-  --amber:#f59e0b;
-  --radius:14px;
+  --primary:#4f46e5; --primary-dark:#4338ca; --bg:#f4f5f7; --card:#fff;
+  --text:#1f2329; --muted:#8a9099; --border:#e9ebef; --green:#10b981;
+  --red:#ef4444; --amber:#f59e0b; --radius:14px;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
-body{
-  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",Arial,sans-serif;
-  background:var(--bg);color:var(--text);font-size:15px;line-height:1.55;
-  -webkit-font-smoothing:antialiased;
-}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",Arial,sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
 input,button{font-family:inherit;font-size:15px}
-input{
-  width:100%;border:1px solid var(--border);background:#fafbfc;border-radius:10px;
-  padding:10px 12px;color:var(--text);outline:none;transition:.15s;
-  -webkit-appearance:none;appearance:none;
-}
+input{width:100%;border:1px solid var(--border);background:#fafbfc;border-radius:10px;padding:10px 12px;color:var(--text);outline:none;transition:.15s;-webkit-appearance:none;appearance:none}
 input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(79,70,229,.08)}
 button{outline:none;border:none;background:none;cursor:pointer;color:inherit}
-
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:6px;
-  padding:10px 16px;border-radius:10px;font-weight:600;transition:.15s;border:1px solid transparent;
-}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border-radius:10px;font-weight:600;transition:.15s;border:1px solid transparent}
 .btn.primary{background:var(--primary);color:#fff}
 .btn.primary:active{background:var(--primary-dark)}
 .btn.primary:disabled{opacity:.5}
@@ -51,73 +30,54 @@ button{outline:none;border:none;background:none;cursor:pointer;color:inherit}
 .page{padding:12px 12px 40px;max-width:720px;margin:0 auto}
 .empty{color:var(--muted);font-size:14px;text-align:center;padding:18px 0}
 .hint{font-size:12.5px;color:var(--muted);margin:-2px 0 10px;min-height:16px}
-
-.topbar{
-  position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--border);
-  padding-top:env(safe-area-inset-top);
-}
-.topbar-inner{
-  max-width:720px;margin:0 auto;padding:12px;display:flex;align-items:center;justify-content:space-between;
-}
+.topbar{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--border);padding-top:env(safe-area-inset-top)}
+.topbar-inner{max-width:720px;margin:0 auto;padding:12px;display:flex;align-items:center;justify-content:space-between}
 .who{display:flex;align-items:center;gap:10px;min-width:0}
-.avatar{
-  width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);
-  color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex:0 0 auto;
-}
+.avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex:0 0 auto}
 .who .name{font-weight:700;font-size:15px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px}
 .who .role{font-size:12px;color:var(--muted);line-height:1.3}
 .topbar-actions{display:flex;gap:8px;flex:0 0 auto}
-
 .field{margin-bottom:12px;min-width:0}
 .field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .date-line{font-size:13.5px;color:var(--muted);margin-bottom:12px}
 .date-line b{color:var(--text)}
-
 .geo-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.geo-icon{
-  width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  font-size:20px;flex:0 0 auto;background:#f2f3f5;
-}
+.geo-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex:0 0 auto;background:#f2f3f5}
 .geo-icon.green{background:rgba(16,185,129,.12)}
 .geo-icon.red{background:rgba(239,68,68,.12)}
 .geo-icon.amber{background:rgba(245,158,11,.14)}
-.geo-icon.gray{background:#f2f3f5}
 .geo-text{min-width:0;flex:1}
 .geo-title{font-weight:700;font-size:15px}
 .geo-desc{font-size:12.5px;color:var(--muted);word-break:break-all}
 .geo-raw{font-size:11.5px;color:var(--muted);margin-top:10px;text-align:center;word-break:break-all}
-
 .item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px dashed var(--border)}
 .item:last-child{border-bottom:none}
 .item-title{font-weight:600;font-size:14.5px}
 .item-sub{font-size:12.5px;color:var(--muted);margin-top:2px;word-break:break-all}
 .item-right{font-weight:700;color:var(--primary);font-size:14px;white-space:nowrap}
-
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center}
 .stat{background:#f8f9fb;border-radius:12px;padding:12px 6px}
 .stat-num{font-weight:800;font-size:16px;color:var(--primary);word-break:break-all}
 .stat-label{font-size:12px;color:var(--muted);margin-top:4px}
-
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(160deg,#eef0ff 0%,#f7f8fb 55%)}
 .login-box{width:100%;max-width:380px;background:#fff;border-radius:18px;padding:28px 22px;box-shadow:0 12px 40px rgba(16,24,40,.08)}
 .login-box .logo{font-size:34px;text-align:center;line-height:1}
 .login-box h1{font-size:20px;text-align:center;margin:12px 0 4px}
-.login-box .sub{text-align:center;color:var(--muted);font-size:13px;margin:0 0 22px;line-height:1.6}
+.login-box .sub{text-align:center;color:var(--muted);font-size:13px;margin:0 0 22px}
+.switch-line{text-align:center;font-size:13px;color:var(--muted);margin-top:14px}
+.switch-line a{color:var(--primary);text-decoration:none;font-weight:600}
 .err{color:var(--red);font-size:13px;text-align:center;margin-top:12px;min-height:18px}
-
 .tabs{display:flex;background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
 .tab{flex:1;text-align:center;padding:13px 0;font-size:14.5px;color:var(--muted);font-weight:600;position:relative}
 .tab.active{color:var(--primary)}
 .tab.active::after{content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:32px;height:3px;border-radius:3px;background:var(--primary)}
-
 .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px}
 table{border-collapse:collapse;width:100%;font-size:13px;min-width:460px}
 th,td{padding:9px 8px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
 th{color:var(--muted);font-weight:600;font-size:12.5px;background:#fafbfc}
 td.num,th.num{text-align:right}
 tbody tr:last-child td{border-bottom:none}
-
 .admin-bar{display:flex;gap:10px;align-items:center;margin-bottom:14px}
 .admin-bar input[type=month]{flex:1;padding:8px 10px}
 .loc-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px dashed var(--border)}
@@ -126,18 +86,11 @@ tbody tr:last-child td{border-bottom:none}
 .loc-meta{font-size:12px;color:var(--muted);margin-top:2px}
 .tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:20px;background:#eef0ff;color:var(--primary);margin-left:6px}
 .tag.off{background:#f2f3f5;color:var(--muted)}
-
 .modal-mask{position:fixed;inset:0;background:rgba(17,24,39,.5);display:flex;align-items:center;justify-content:center;padding:24px;z-index:9998}
 .modal{background:#fff;border-radius:16px;padding:22px 20px;width:100%;max-width:320px;box-shadow:0 20px 50px rgba(0,0,0,.2)}
 .modal h3{margin:0 0 6px;font-size:16px}
 .modal p{margin:0 0 14px;font-size:13px;color:var(--muted)}
-
-.toast{
-  position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.92);
-  background:rgba(17,24,39,.88);color:#fff;padding:12px 20px;border-radius:12px;
-  font-size:14px;max-width:78vw;text-align:center;opacity:0;pointer-events:none;
-  transition:opacity .18s,transform .18s;z-index:9999;line-height:1.45;
-}
+.toast{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.92);background:rgba(17,24,39,.88);color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;max-width:78vw;text-align:center;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:9999;line-height:1.45}
 .toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
 .loading{padding:60px 20px;text-align:center;color:var(--muted)}
 </style>
@@ -149,14 +102,12 @@ tbody tr:last-child td{border-bottom:none}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
 /* =========================================================
- *  1. 配置区
+ *  1. 配置区 —— 换成你自己的 Supabase 地址和 anon key
  * =======================================================*/
-const SUPABASE_URL      = 'https://lzeevgnsknxhkrmvrpjq.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx6ZWV2Z25za254aGtybXZycGpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEwMTIxMTMsImV4cCI6MjEwNjU4ODExM30.1g31WPG9Y9RwtN24Sel0fSLZTiFNNZ_kl5sUN4-PVxM';
+const SUPABASE_URL      = 'https://你的项目ID.supabase.co';
+const SUPABASE_ANON_KEY = '你的anon_key';
 
-const ADMIN_KEY = '121315';          // 管理员密钥
-const USER_STORE_KEY = 'lck_user_v1';// 本地缓存用户信息的 key
-
+const ADMIN_KEY = '121315';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /* =========================================================
@@ -175,7 +126,6 @@ function todayStr(){
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 }
 function currentMonth(){ return todayStr().slice(0,7); }
-
 function monthRange(ym){
   const [y,m] = ym.split('-').map(Number);
   const start = `${y}-${pad(m)}-01`;
@@ -190,10 +140,7 @@ function fmtDuration(min){
   return `${m}分钟`;
 }
 function hm(t){ return (t || '').slice(0,5); }
-function timeToMin(t){
-  const [h,m] = String(t).split(':').map(Number);
-  return h*60 + m;
-}
+function timeToMin(t){ const [h,m] = String(t).split(':').map(Number); return h*60 + m; }
 function segmentMinutes(start, end){
   let s = timeToMin(start), e = timeToMin(end);
   let d = e - s;
@@ -203,71 +150,29 @@ function segmentMinutes(start, end){
 function haversine(lat1, lng1, lat2, lng2){
   const R = 6371000, rad = x => x * Math.PI / 180;
   const dLat = rad(lat2-lat1), dLng = rad(lng2-lng1);
-  const a = Math.sin(dLat/2)**2 +
-            Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLng/2)**2;
+  const a = Math.sin(dLat/2)**2 + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLng/2)**2;
   return 2 * R * Math.asin(Math.sqrt(a));
 }
 function toast(msg, type){
   const el = document.getElementById('toast');
   el.textContent = msg;
-  el.style.background = type === 'error' ? 'rgba(190,30,30,.92)'
-                     : type === 'success' ? 'rgba(6,120,80,.92)'
-                     : 'rgba(17,24,39,.88)';
+  el.style.background = type === 'error' ? 'rgba(190,30,30,.92)' : type === 'success' ? 'rgba(6,120,80,.92)' : 'rgba(17,24,39,.88)';
   el.classList.add('show');
   clearTimeout(el._t);
   el._t = setTimeout(() => el.classList.remove('show'), 2200);
 }
 
 /* =========================================================
- *  3. 用户身份（来自微信，无登录）
- * =======================================================*/
-/**
- * 小程序端通过 web-view 的 src 传入：
- *   https://xxx.zeabur.app/?nickname=张三&avatar=https%3A%2F%2F...&phone=13800138000
- * 也兼容小程序端在收到用户信息后重新 setData 更新 src 的场景。
- */
-function parseUserFromUrl(){
-  let q;
-  try { q = new URLSearchParams(location.search); } catch(e){ return null; }
-  const phone = (q.get('phone') || '').trim();
-  if (!/^1\d{10}$/.test(phone)) return null;
-  return {
-    nickname: (q.get('nickname') || '').trim() || ('直播人员' + phone.slice(-4)),
-    avatar: (q.get('avatar') || '').trim(),
-    phone: phone
-  };
-}
-function saveUser(u){
-  try { localStorage.setItem(USER_STORE_KEY, JSON.stringify(u)); } catch(e){}
-}
-function loadUser(){
-  try {
-    const raw = localStorage.getItem(USER_STORE_KEY);
-    if (!raw) return null;
-    const u = JSON.parse(raw);
-    if (u && /^1\d{10}$/.test(u.phone)) return u;
-  } catch(e){}
-  return null;
-}
-function clearUser(){
-  try { localStorage.removeItem(USER_STORE_KEY); } catch(e){}
-}
-/** 手机号脱敏：138****8000 */
-function maskPhone(p){
-  p = String(p || '');
-  return p.length === 11 ? p.slice(0,3) + '****' + p.slice(7) : p;
-}
-
-/* =========================================================
- *  4. 全局状态
+ *  3. 全局状态
  * =======================================================*/
 const state = {
-  view: 'boot',        // boot | profile | user | admin
-  user: null,
+  view: 'boot',        // boot | login | user | admin
+  session: null,
+  userName: '',
+  isAdmin: false,      // 是否已验证管理员密钥
 
   allLocations: [],
   locations: [],
-
   geo: null,
   geoStatus: 'idle',   // idle | loading | ok | out | error
   geoMsg: '',
@@ -283,20 +188,13 @@ const state = {
 };
 
 /* =========================================================
- *  5. 定位
+ *  4. 定位相关
  * =======================================================*/
 function locateOnce(){
   return new Promise((resolve, reject) => {
-    if (!navigator.geolocation){
-      reject({ code: -1 });
-      return;
-    }
+    if (!navigator.geolocation) { reject({ code: -1 }); return; }
     navigator.geolocation.getCurrentPosition(
-      p => resolve({
-        lat: p.coords.latitude,
-        lng: p.coords.longitude,
-        accuracy: p.coords.accuracy
-      }),
+      p => resolve({ lat: p.coords.latitude, lng: p.coords.longitude, accuracy: p.coords.accuracy }),
       e => reject(e),
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
@@ -304,7 +202,7 @@ function locateOnce(){
 }
 function geoErrMsg(e){
   if (!e) return '定位失败，请重试';
-  if (e.code === 1) return '定位权限被拒绝，请在微信「设置—位置信息」中允许';
+  if (e.code === 1) return '定位权限被拒绝，请在浏览器设置中允许获取位置';
   if (e.code === 2) return '无法获取位置，请检查 GPS 与网络';
   if (e.code === 3) return '定位超时，请到空旷处重试';
   if (e.code === -1) return '当前环境不支持定位（需 HTTPS 访问）';
@@ -338,7 +236,7 @@ async function doLocate(){
 }
 
 /* =========================================================
- *  6. 数据加载
+ *  5. 数据加载
  * =======================================================*/
 async function loadLocations(){
   const { data, error } = await sb.from('locations').select('*').order('id');
@@ -348,16 +246,12 @@ async function loadLocations(){
 }
 
 async function loadMyData(){
-  const uid = state.user.phone;
+  const uid = state.session.user.id;
   const [mStart, mEnd] = monthRange(currentMonth());
   const [a, b] = await Promise.all([
-    sb.from('checkins').select('*')
-      .eq('user_id', uid).eq('work_date', todayStr())
-      .order('start_time', { ascending: true }),
-    sb.from('checkins').select('*')
-      .eq('user_id', uid).gte('work_date', mStart).lt('work_date', mEnd)
-      .order('work_date', { ascending: false })
-      .order('start_time', { ascending: false })
+    sb.from('checkins').select('*').eq('user_id', uid).eq('work_date', todayStr()).order('start_time', { ascending: true }),
+    sb.from('checkins').select('*').eq('user_id', uid).gte('work_date', mStart).lt('work_date', mEnd)
+      .order('work_date', { ascending: false }).order('start_time', { ascending: false })
   ]);
   state.myToday = a.data || [];
   state.myMonth = b.data || [];
@@ -375,77 +269,117 @@ async function loadAdminData(){
 }
 
 /* =========================================================
- *  7. 渲染入口
+ *  6. 渲染入口
  * =======================================================*/
 function render(){
   if (state.view === 'boot'){ app.innerHTML = '<div class="loading">加载中…</div>'; return; }
-  if (state.view === 'profile'){ renderProfile(); return; }
+  if (state.view === 'login'){ renderLogin(); return; }
   if (state.view === 'admin'){ renderAdmin(); return; }
   renderUser();
 }
 
-/* ---------- 7.1 身份页（仅当小程序未传入时出现） ---------- */
-function renderProfile(){
+/* ---------- 6.1 登录页 ---------- */
+let authMode = 'signin';
+function renderLogin(){
   app.innerHTML = `
   <div class="login-wrap">
     <div class="login-box">
       <div class="logo">🎬</div>
       <h1>直播团队打卡</h1>
-      <p class="sub">未获取到微信授权信息<br/>请在小程序内打开，或手动填写身份</p>
+      <p class="sub">请登录后使用打卡功能</p>
       <div class="field">
-        <label>昵称 / 姓名</label>
-        <input id="pName" maxlength="12" placeholder="请输入你的名字" />
+        <label>邮箱</label>
+        <input id="email" type="email" placeholder="you@example.com" autocomplete="username" />
       </div>
       <div class="field">
-        <label>手机号</label>
-        <input id="pPhone" type="tel" inputmode="numeric" maxlength="11" placeholder="请输入 11 位手机号" />
+        <label>密码</label>
+        <input id="password" type="password" placeholder="至少 6 位" autocomplete="current-password" />
       </div>
-      <button class="btn primary block" id="pSubmit">进入打卡</button>
-      <div class="err" id="pErr"></div>
+      <div class="field" id="nameField" style="display:none">
+        <label>姓名 / 昵称</label>
+        <input id="name" placeholder="请输入真实姓名" />
+      </div>
+      <button class="btn primary block" id="btnAuth">登 录</button>
+      <div class="switch-line">
+        <span id="switchText">还没有账号？</span>
+        <a href="javascript:;" id="btnSwitch">立即注册</a>
+      </div>
+      <div class="err" id="loginErr"></div>
     </div>
   </div>`;
 
-  const submit = () => {
-    const name = document.getElementById('pName').value.trim();
-    const phone = document.getElementById('pPhone').value.trim();
-    const errEl = document.getElementById('pErr');
+  const btnAuth = document.getElementById('btnAuth');
+  const btnSwitch = document.getElementById('btnSwitch');
+  const nameField = document.getElementById('nameField');
+  const switchText = document.getElementById('switchText');
+  const errEl = document.getElementById('loginErr');
+
+  btnSwitch.onclick = () => {
+    authMode = authMode === 'signin' ? 'signup' : 'signin';
+    const isUp = authMode === 'signup';
+    btnAuth.textContent = isUp ? '注 册' : '登 录';
+    nameField.style.display = isUp ? 'block' : 'none';
+    switchText.textContent = isUp ? '已有账号？' : '还没有账号？';
+    btnSwitch.textContent = isUp ? '去登录' : '立即注册';
     errEl.textContent = '';
-
-    if (!name){ errEl.textContent = '请填写昵称'; return; }
-    if (!/^1\d{10}$/.test(phone)){ errEl.textContent = '请填写正确的 11 位手机号'; return; }
-
-    const u = { nickname: name, avatar: '', phone };
-    saveUser(u);
-    state.user = u;
-    enterApp();
   };
 
-  document.getElementById('pSubmit').onclick = submit;
-  document.getElementById('pPhone').addEventListener('keydown', e => {
-    if (e.key === 'Enter') submit();
-  });
+  btnAuth.onclick = async () => {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const name = (document.getElementById('name').value || '').trim();
+    errEl.textContent = '';
+
+    if (!email || !password){ errEl.textContent = '请填写邮箱和密码'; return; }
+    if (password.length < 6){ errEl.textContent = '密码至少 6 位'; return; }
+
+    btnAuth.disabled = true; btnAuth.textContent = '处理中…';
+    try {
+      if (authMode === 'signup'){
+        if (!name){ throw new Error('请填写姓名'); }
+        const { data, error } = await sb.auth.signUp({ email, password, options: { data: { name } } });
+        if (error) throw error;
+        // 若开启了邮箱确认，可能没有 session
+        if (!data.session){
+          errEl.textContent = '注册成功，请到邮箱确认后再登录';
+          btnAuth.disabled = false; btnAuth.textContent = '注 册';
+          return;
+        }
+        // 注册成功，写入 profiles 表
+        await sb.from('profiles').insert({ id: data.user.id, name });
+        await enterWithSession(data.session);
+      } else {
+        const { data, error } = await sb.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        await enterWithSession(data.session);
+      }
+    } catch (e){
+      errEl.textContent = e.message || '操作失败';
+      btnAuth.disabled = false;
+      btnAuth.textContent = authMode === 'signup' ? '注 册' : '登 录';
+    }
+  };
 }
 
-/* ---------- 7.2 用户打卡页 ---------- */
+/* ---------- 6.2 用户打卡页 ---------- */
 function renderUser(){
-  const u = state.user;
-  const avatarHtml = u.avatar
-    ? `<img src="${esc(u.avatar)}" alt="" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex:0 0 auto">`
-    : `<span class="avatar">${esc((u.nickname || 'U').slice(0,1))}</span>`;
+  const u = state.session.user;
+  const displayName = u.user_metadata?.name || u.email.split('@')[0];
+  const avatarChar = displayName.slice(0, 1).toUpperCase();
 
   app.innerHTML = `
   <div class="topbar">
     <div class="topbar-inner">
       <div class="who">
-        ${avatarHtml}
+        <span class="avatar">${esc(avatarChar)}</span>
         <div style="min-width:0">
-          <div class="name">${esc(u.nickname)}</div>
-          <div class="role">${maskPhone(u.phone)}</div>
+          <div class="name">${esc(displayName)}</div>
+          <div class="role">${esc(u.email)}</div>
         </div>
       </div>
       <div class="topbar-actions">
         <button class="btn tiny ghost" id="btnAdmin">管理</button>
-        <button class="btn tiny ghost" id="btnSwitch">切换</button>
+        <button class="btn tiny ghost" id="btnLogout">退出</button>
       </div>
     </div>
   </div>
@@ -484,14 +418,12 @@ function renderUser(){
     </section>
   </main>`;
 
-  document.getElementById('btnAdmin').onclick = askAdminKey;
-  document.getElementById('btnSwitch').onclick = () => {
-    if (!confirm('确定要切换账号吗？将清除本机保存的微信身份信息。')) return;
-    clearUser();
-    state.user = null;
-    state.view = 'profile';
-    render();
+  document.getElementById('btnLogout').onclick = async () => {
+    await sb.auth.signOut();
+    state.session = null; state.isAdmin = false;
+    state.view = 'login'; render();
   };
+  document.getElementById('btnAdmin').onclick = askAdminKey;
 
   document.getElementById('btnCheckin').onclick = submitCheckin;
 
@@ -522,25 +454,18 @@ function renderGeoCard(){
   if (!el) return;
 
   let icon = '📍', cls = 'gray', title = '尚未定位', desc = '提交打卡前需先完成定位';
-
-  if (state.geoStatus === 'loading'){
-    icon = '⏳'; cls = 'amber'; title = '正在获取位置…'; desc = '请保持网络畅通';
-  } else if (state.geoStatus === 'ok'){
-    icon = '✅'; cls = 'green'; title = '已在打卡范围内';
-    desc = `${esc(state.matched.loc.name)} · 距离约 ${Math.round(state.matched.distance)} 米`;
-  } else if (state.geoStatus === 'out'){
+  if (state.geoStatus === 'loading'){ icon = '⏳'; cls = 'amber'; title = '正在获取位置…'; desc = '请保持网络畅通'; }
+  else if (state.geoStatus === 'ok'){ icon = '✅'; cls = 'green'; title = '已在打卡范围内'; desc = `${esc(state.matched.loc.name)} · 距离约 ${Math.round(state.matched.distance)} 米`; }
+  else if (state.geoStatus === 'out'){
     icon = '⚠️'; cls = 'red'; title = '不在打卡范围内';
     let near = null;
     for (const loc of state.locations){
       const d = haversine(state.geo.lat, state.geo.lng, Number(loc.lat), Number(loc.lng));
       if (!near || d < near.d) near = { loc, d };
     }
-    desc = near
-      ? `最近打卡点「${esc(near.loc.name)}」约 ${Math.round(near.d)} 米，请靠近后重试`
-      : '系统尚未配置打卡点，请联系管理员';
-  } else if (state.geoStatus === 'error'){
-    icon = '❌'; cls = 'red'; title = '定位失败'; desc = esc(state.geoMsg);
+    desc = near ? `最近打卡点「${esc(near.loc.name)}」约 ${Math.round(near.d)} 米，请靠近后重试` : '系统尚未配置打卡点，请联系管理员';
   }
+  else if (state.geoStatus === 'error'){ icon = '❌'; cls = 'red'; title = '定位失败'; desc = esc(state.geoMsg); }
 
   el.innerHTML = `
     <div class="geo-head">
@@ -562,10 +487,7 @@ function renderGeoCard(){
 function renderTodayList(){
   const el = document.getElementById('todayList');
   if (!el) return;
-  if (!state.myToday.length){
-    el.innerHTML = '<div class="empty">今天还没有打卡记录</div>';
-    return;
-  }
+  if (!state.myToday.length){ el.innerHTML = '<div class="empty">今天还没有打卡记录</div>'; return; }
   el.innerHTML = state.myToday.map(r => `
     <div class="item">
       <div class="item-main" style="min-width:0">
@@ -589,7 +511,7 @@ function renderMonthSummary(){
     </div>`;
 }
 
-/* ---------- 7.3 提交打卡 ---------- */
+/* ---------- 6.3 提交打卡 ---------- */
 async function submitCheckin(){
   const sEl = document.getElementById('startTime');
   const eEl = document.getElementById('endTime');
@@ -617,13 +539,15 @@ async function submitCheckin(){
   }
 
   const btn = document.getElementById('btnCheckin');
-  btn.disabled = true;
-  btn.textContent = '提交中…';
+  btn.disabled = true; btn.textContent = '提交中…';
+
+  const u = state.session.user;
+  const displayName = u.user_metadata?.name || u.email.split('@')[0];
 
   const { error } = await sb.from('checkins').insert({
-    user_id: state.user.phone,        // 手机号作为唯一标识
-    user_name: state.user.nickname,
-    user_avatar: state.user.avatar || null,
+    user_id: u.id,
+    user_name: displayName,
+    user_avatar: null,
     work_date: todayStr(),
     start_time: s.length === 5 ? s + ':00' : s,
     end_time: e.length === 5 ? e + ':00' : e,
@@ -636,25 +560,19 @@ async function submitCheckin(){
     remark: remark || null
   });
 
-  btn.disabled = false;
-  btn.textContent = '提交打卡';
-
-  if (error){
-    toast('打卡失败：' + error.message, 'error');
-    return;
-  }
+  btn.disabled = false; btn.textContent = '提交打卡';
+  if (error){ toast('打卡失败：' + error.message, 'error'); return; }
 
   toast('打卡成功 🎉', 'success');
   sEl.value = ''; eEl.value = ''; hEl.value = ''; mEl.value = ''; rEl.value = '';
   updateAutoHint();
-
   await loadMyData();
   renderTodayList();
   renderMonthSummary();
 }
 
 /* =========================================================
- *  8. 管理员密钥验证
+ *  7. 管理员密钥验证
  * =======================================================*/
 function askAdminKey(){
   const mask = document.createElement('div');
@@ -675,18 +593,16 @@ function askAdminKey(){
   const input = mask.querySelector('#adminKeyInput');
   const err = mask.querySelector('#adminKeyErr');
   setTimeout(() => input.focus(), 120);
-
   const close = () => mask.remove();
 
   mask.querySelector('#adminCancel').onclick = close;
   mask.querySelector('#adminOk').onclick = async () => {
     if (input.value.trim() !== ADMIN_KEY){
       err.textContent = '密钥错误，请重试';
-      input.value = '';
-      input.focus();
-      return;
+      input.value = ''; input.focus(); return;
     }
     close();
+    state.isAdmin = true;
     state.view = 'admin';
     state.adminTab = 'data';
     state.editingLoc = null;
@@ -695,20 +611,18 @@ function askAdminKey(){
     await loadAdminData();
     renderAdminMain();
   };
-  input.addEventListener('keydown', e => {
-    if (e.key === 'Enter') mask.querySelector('#adminOk').click();
-  });
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') mask.querySelector('#adminOk').click(); });
 }
 
 /* =========================================================
- *  9. 管理后台
+ *  8. 管理后台
  * =======================================================*/
 function renderAdmin(){
   app.innerHTML = `
   <div class="topbar">
     <div class="topbar-inner">
       <div class="who">
-        <button class="btn tiny ghost" id="btnBack">← 返回</button>
+        <button class="btn tiny ghost" id="btnBack">← 返回打卡</button>
         <div class="name" style="margin-left:4px">管理后台</div>
       </div>
       <div class="topbar-actions">
@@ -724,23 +638,15 @@ function renderAdmin(){
 
   document.getElementById('btnBack').onclick = async () => {
     await loadMyData();
-    state.view = 'user';
-    render();
+    state.view = 'user'; render();
   };
   document.getElementById('btnExitAdmin').onclick = () => {
-    state.view = 'user';
-    render();
-    toast('已退出管理模式');
+    state.isAdmin = false; state.view = 'user'; render(); toast('已退出管理模式');
   };
 
   document.querySelectorAll('.tab').forEach(t => {
-    t.onclick = () => {
-      state.adminTab = t.dataset.tab;
-      state.editingLoc = null;
-      renderAdmin();
-    };
+    t.onclick = () => { state.adminTab = t.dataset.tab; state.editingLoc = null; renderAdmin(); };
   });
-
   renderAdminMain();
 }
 
@@ -749,18 +655,17 @@ function renderAdminMain(){
   else renderAdminLocations();
 }
 
-/* ---- 9.1 打卡数据 ---- */
+/* ---- 8.1 打卡数据 ---- */
 function renderAdminData(){
   const main = document.getElementById('adminMain');
   if (!main) return;
 
   const rows = state.adminData;
-
   const map = new Map();
   for (const r of rows){
     const name = r.user_name || '未知用户';
     const key = r.user_id || name;
-    if (!map.has(key)) map.set(key, { name, phone: r.user_id || '', count: 0, total: 0, days: new Set() });
+    if (!map.has(key)) map.set(key, { name, count: 0, total: 0, days: new Set() });
     const o = map.get(key);
     o.count++;
     o.total += r.duration_minutes;
@@ -787,13 +692,10 @@ function renderAdminData(){
       ${users.length ? `
       <div class="table-wrap">
         <table>
-          <thead><tr>
-            <th>姓名</th><th>手机号</th><th class="num">打卡次数</th><th class="num">打卡天数</th><th class="num">总时长</th>
-          </tr></thead>
+          <thead><tr><th>姓名</th><th class="num">打卡次数</th><th class="num">打卡天数</th><th class="num">总时长</th></tr></thead>
           <tbody>
             ${users.map(u => `<tr>
               <td>${esc(u.name)}</td>
-              <td>${esc(maskPhone(u.phone))}</td>
               <td class="num">${u.count}</td>
               <td class="num">${u.days.size}</td>
               <td class="num"><b>${fmtDuration(u.total)}</b></td>
@@ -808,9 +710,7 @@ function renderAdminData(){
       ${rows.length ? `
       <div class="table-wrap">
         <table>
-          <thead><tr>
-            <th>日期</th><th>姓名</th><th>直播时段</th><th class="num">时长</th><th>打卡点</th><th>备注</th>
-          </tr></thead>
+          <thead><tr><th>日期</th><th>姓名</th><th>直播时段</th><th class="num">时长</th><th>打卡点</th><th>备注</th></tr></thead>
           <tbody>
             ${rows.map(r => `<tr>
               <td>${esc(r.work_date)}</td>
@@ -827,8 +727,7 @@ function renderAdminData(){
 
   document.getElementById('adminMonth').onchange = async (e) => {
     state.adminMonth = e.target.value || currentMonth();
-    await loadAdminData();
-    renderAdminData();
+    await loadAdminData(); renderAdminData();
   };
   document.getElementById('btnExport').onclick = exportCSV;
 }
@@ -841,38 +740,27 @@ function csvCell(v){
 function exportCSV(){
   const rows = state.adminData;
   if (!rows.length) return toast('当前月份没有数据可导出', 'error');
-
-  const header = ['日期','姓名','手机号','开始时间','结束时间','直播时长(分钟)','直播时长','打卡地点','距离(米)','备注'];
+  const header = ['日期','姓名','开始时间','结束时间','直播时长(分钟)','直播时长','打卡地点','距离(米)','备注'];
   const lines = [header.join(',')];
   for (const r of rows){
     lines.push([
-      r.work_date,
-      csvCell(r.user_name || ''),
-      r.user_id || '',
-      hm(r.start_time),
-      hm(r.end_time),
-      r.duration_minutes,
-      csvCell(fmtDuration(r.duration_minutes)),
-      csvCell(r.location_name || ''),
-      r.distance_m == null ? '' : r.distance_m,
+      r.work_date, csvCell(r.user_name || ''), hm(r.start_time), hm(r.end_time),
+      r.duration_minutes, csvCell(fmtDuration(r.duration_minutes)),
+      csvCell(r.location_name || ''), r.distance_m == null ? '' : r.distance_m,
       csvCell(r.remark || '')
     ].join(','));
   }
-
   const content = '\uFEFF' + lines.join('\r\n');
   const blob = new Blob([content], { type: 'text/csv;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = `直播打卡_${state.adminMonth}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
+  a.href = url; a.download = `直播打卡_${state.adminMonth}.csv`;
+  document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1500);
   toast('已导出', 'success');
 }
 
-/* ---- 9.2 打卡点管理 ---- */
+/* ---- 8.2 打卡点管理 ---- */
 function renderAdminLocations(){
   const main = document.getElementById('adminMain');
   if (!main) return;
@@ -882,20 +770,16 @@ function renderAdminLocations(){
   main.innerHTML = `
     <section class="card">
       <h3 class="card-title">${ed ? '编辑打卡点' : '新增打卡点'}</h3>
-      <div class="field">
-        <label>打卡点名称</label>
-        <input id="locName" placeholder="如：公司 3 楼直播间" value="${ed ? esc(ed.name) : ''}" />
-      </div>
+      <div class="field"><label>打卡点名称</label>
+        <input id="locName" placeholder="如：公司 3 楼直播间" value="${ed ? esc(ed.name) : ''}" /></div>
       <div class="grid2">
         <div class="field"><label>纬度 lat</label>
           <input id="locLat" type="number" step="0.000001" placeholder="36.123456" value="${ed ? ed.lat : ''}" /></div>
         <div class="field"><label>经度 lng</label>
           <input id="locLng" type="number" step="0.000001" placeholder="116.123456" value="${ed ? ed.lng : ''}" /></div>
       </div>
-      <div class="field">
-        <label>有效半径（米）</label>
-        <input id="locRadius" type="number" min="30" max="10000" value="${ed ? ed.radius : 300}" />
-      </div>
+      <div class="field"><label>有效半径（米）</label>
+        <input id="locRadius" type="number" min="30" max="10000" value="${ed ? ed.radius : 300}" /></div>
       <div class="grid2">
         <button class="btn ghost block" id="btnUseGeo">用当前位置填充</button>
         <button class="btn primary block" id="btnSaveLoc">${ed ? '保存修改' : '添加打卡点'}</button>
@@ -908,9 +792,7 @@ function renderAdminLocations(){
       ${list.length ? list.map(l => `
         <div class="loc-item">
           <div style="min-width:0">
-            <div class="loc-name">${esc(l.name)}
-              ${l.active ? '' : '<span class="tag off">已停用</span>'}
-            </div>
+            <div class="loc-name">${esc(l.name)} ${l.active ? '' : '<span class="tag off">已停用</span>'}</div>
             <div class="loc-meta">${Number(l.lat).toFixed(6)}, ${Number(l.lng).toFixed(6)} · 半径 ${l.radius} 米</div>
           </div>
           <div style="display:flex;gap:6px;flex:0 0 auto">
@@ -929,17 +811,13 @@ function renderAdminLocations(){
       document.getElementById('locLat').value = pos.lat.toFixed(6);
       document.getElementById('locLng').value = pos.lng.toFixed(6);
       toast('已填入当前坐标', 'success');
-    } catch (e){
-      toast(geoErrMsg(e), 'error');
-    }
+    } catch (e){ toast(geoErrMsg(e), 'error'); }
     btn.disabled = false; btn.textContent = '用当前位置填充';
   };
 
   document.getElementById('btnSaveLoc').onclick = saveLocation;
-
   const cancel = document.getElementById('btnCancelEdit');
   if (cancel) cancel.onclick = () => { state.editingLoc = null; renderAdminLocations(); };
-
   main.querySelectorAll('[data-act]').forEach(btn => {
     btn.onclick = () => handleLocAction(btn.dataset.act, Number(btn.dataset.id));
   });
@@ -958,78 +836,62 @@ async function saveLocation(){
 
   const payload = { name, lat, lng, radius };
   let error;
-  if (state.editingLoc){
-    ({ error } = await sb.from('locations').update(payload).eq('id', state.editingLoc.id));
-  } else {
-    ({ error } = await sb.from('locations').insert({ ...payload, active: true }));
-  }
+  if (state.editingLoc){ ({ error } = await sb.from('locations').update(payload).eq('id', state.editingLoc.id)); }
+  else { ({ error } = await sb.from('locations').insert({ ...payload, active: true })); }
   if (error) return toast('保存失败：' + error.message, 'error');
 
   toast('已保存', 'success');
   state.editingLoc = null;
-  await loadLocations();
-  renderAdminLocations();
+  await loadLocations(); renderAdminLocations();
 }
 
 async function handleLocAction(act, id){
   const loc = state.allLocations.find(l => l.id === id);
   if (!loc) return;
-
-  if (act === 'edit'){
-    state.editingLoc = loc;
-    renderAdminLocations();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    return;
-  }
+  if (act === 'edit'){ state.editingLoc = loc; renderAdminLocations(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
   if (act === 'toggle'){
     const { error } = await sb.from('locations').update({ active: !loc.active }).eq('id', id);
     if (error) return toast('操作失败：' + error.message, 'error');
-    await loadLocations();
-    renderAdminLocations();
-    return;
+    await loadLocations(); renderAdminLocations(); return;
   }
   if (act === 'del'){
-    if (!confirm(`确定删除打卡点「${loc.name}」吗？\n历史打卡记录不会受影响。`)) return;
+    if (!confirm(`确定删除打卡点「${loc.name}」吗？`)) return;
     const { error } = await sb.from('locations').delete().eq('id', id);
     if (error) return toast('删除失败：' + error.message, 'error');
     toast('已删除', 'success');
-    await loadLocations();
-    renderAdminLocations();
+    await loadLocations(); renderAdminLocations();
   }
 }
 
 /* =========================================================
- * 10. 启动
+ *  9. 启动与会话管理
  * =======================================================*/
-async function enterApp(){
+async function enterWithSession(session){
+  state.session = session;
+  state.isAdmin = false;
   await loadLocations();
   await loadMyData();
-  state.geo = null;
-  state.geoStatus = 'idle';
-  state.matched = null;
+  state.geo = null; state.geoStatus = 'idle'; state.matched = null;
   state.view = 'user';
   render();
 }
 
 async function boot(){
-  // 优先读取小程序通过 URL 传入的微信信息
-  const fromUrl = parseUserFromUrl();
-  if (fromUrl){
-    saveUser(fromUrl);
-    state.user = fromUrl;
-    await enterApp();
-    return;
+  sb.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_OUT'){
+      state.session = null; state.isAdmin = false;
+      state.view = 'login'; render();
+    }
+  });
+
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session){ await enterWithSession(session); }
+    else { state.view = 'login'; render(); }
+  } catch (e){
+    console.error(e);
+    state.view = 'login'; render();
   }
-  // 其次读本地缓存
-  const cached = loadUser();
-  if (cached){
-    state.user = cached;
-    await enterApp();
-    return;
-  }
-  // 都没有 → 显示身份填写页
-  state.view = 'profile';
-  render();
 }
 
 boot();
