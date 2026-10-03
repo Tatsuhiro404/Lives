@@ -159,6 +159,33 @@ function toast(msg, type){
   el._t = setTimeout(() => el.classList.remove('show'), 2200);
 }
 
+/* ---------- 手机端 APP 下载 ---------- */
+function isWeChatBrowser(){
+  return /MicroMessenger/i.test(navigator.userAgent);
+}
+
+function setupAppDownload(){
+  const btn = document.getElementById('btnDownloadApp');
+  if (!btn) return;
+
+  btn.addEventListener('click', function(e){
+    if (!isWeChatBrowser()) return;
+
+    e.preventDefault();
+
+    const mask = document.createElement('div');
+    mask.className = 'modal-mask';
+    mask.innerHTML = `
+      <div class="modal">
+        <h3>请在浏览器中下载 APP</h3>
+        <p>微信内置浏览器通常会限制 APK 文件直接下载。请点击右上角「⋯」，选择「在浏览器中打开」，再点击“下载手机端 APP”。</p>
+        <button class="btn primary block" id="downloadTipOk">知道了</button>
+      </div>`;
+    document.body.appendChild(mask);
+    mask.querySelector('#downloadTipOk').onclick = () => mask.remove();
+  });
+}
+
 /* =========================================================
  *  3. 全局状态
  * =======================================================*/
@@ -301,6 +328,9 @@ function renderMain(){
     <div class="topbar-inner">
       <div class="topbar-title">🎬 直播团队打卡</div>
       <div class="topbar-actions">
+        <a class="btn tiny ghost" id="btnDownloadApp"
+           href="./base.apk" download="直播团队打卡.apk"
+           style="text-decoration:none;">下载手机端 APP</a>
         <button class="btn tiny ghost" id="btnAdmin">管理后台</button>
       </div>
     </div>
@@ -958,6 +988,7 @@ async function boot(){
     console.error(e);
   }
   render();
+  setupAppDownload();
 }
 boot();
 </script>
